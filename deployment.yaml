@@ -12,11 +12,24 @@ spec:
       labels:
         app: nginx
     spec:
+      # 【关键】定义一个卷，指向上面创建的 ConfigMap
+      volumes:
+      - name: nginx-config-volume   # 卷的名称
+        configMap:
+          name: nginx-custom-config  # 必须是上面 ConfigMap 的名字
+          items:
+          - key: default.conf        # 使用 ConfigMap 里的哪个键
+            path: default.conf       # 在 Pod 里生成的文件叫什么名字
+
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
+        # 【关键】将刚才定义的卷挂载到容器内的 Nginx 配置目录
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d   # 挂载到这个目录下
 ---
 apiVersion: v1
 kind: Service
