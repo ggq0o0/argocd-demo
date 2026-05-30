@@ -14,9 +14,14 @@ data:
             index  index.html index.htm;
         }
 
-        # 示例：配置一个健康检查接口
         location /health {
+            access_log off;
             return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+        location /ready {
+            access_log off;
+            return 200 "ready\n";
             add_header Content-Type text/plain;
         }
 
